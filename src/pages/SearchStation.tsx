@@ -112,7 +112,7 @@ const SearchStation = () => {
           {isLoading ? (
             <div className="h-full w-full flex items-center gap-2 justify-center">
               <Loader />{" "}
-              <span className="font-black text-xl">
+              <span className="font-semibold text-xl">
                 근처 대여소를 찾는 중입니다. . . .
               </span>
             </div>
