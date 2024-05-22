@@ -23,9 +23,9 @@ const SideBar = () => {
             <Link to="/" onClick={() => handleCloseSidebar} className='flex items-end justify-start gap-2 ml-3 mt-8 text-xl tracking-tight text-[#056531]'>
               <SiShazam className="text-3xl mb-1"/> 
               <span className='font-black font-point text-2xl pt-1'>따릉이</span>
-              <span className='text-lg font-semibold text-gray-500 tracking-tighter leading-[14px]'>
-                <p className=' font-point'>Seoul</p>
-                <p className='font-point'>Bike</p>
+              <span className='text-lg font-semibold text-gray-500 tracking-tighter leading-[14px] font-point'>
+                <p>Seoul</p>
+                <p>Bike</p>
               </span>
             </Link>
           </div>
@@ -39,7 +39,7 @@ const SideBar = () => {
                   <span>{item.title}</span>
                 </p>
                 {item.links.map(link => (
-                  <NavLink to={`/${link.linkTo}`} key={link.name} onClick={() => handleCloseSidebar} className={({ isActive }) => isActive ? activeLink : notActiveLink}>
+                  <NavLink to={`${link.linkTo}`} key={link.name} onClick={() => handleCloseSidebar} className={({ isActive }) => isActive ? activeLink : notActiveLink}>
                     {link.name}
                   </NavLink>
                 ))}

@@ -8,19 +8,19 @@ export const links = [
     links: [
       {
         name: '따릉이 소개',
-        linkTo: 'home',
+        linkTo: '/',
       },
       {
         name: '대여 방법',
-        linkTo: 'rent',
+        linkTo: '/rent',
       },
       {
         name: '반납 / 임시장금 방법',
-        linkTo: 'return',
+        linkTo: '/return',
       },
       {
         name: '대여소 조회',
-        linkTo: 'search/station',
+        linkTo: '/search/station',
       },
     ],
   },
@@ -30,11 +30,11 @@ export const links = [
     links: [
       {
         name: '고장 및 대여 이력 (일별)',
-        linkTo: 'day/report',
+        linkTo: '/day/report',
       },
       {
         name: '이용정보 (월별)',
-        linkTo: 'monthly/usage',
+        linkTo: '/monthly/usage',
       },
     ],
   },
