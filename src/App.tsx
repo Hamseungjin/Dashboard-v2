@@ -15,6 +15,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+    <div className='flex relative'>
       {activeMenu ? (
         <div className="w-72 fixed sidebar bg-white">
           <SideBar />
@@ -24,15 +25,11 @@ const App = () => {
           <SideBar />
         </div>
       )}
-      <div
-        className={`bg-main-bg min-h-screen w-full ${
-          activeMenu ? "md:ml-72" : "flex-2"
-        }`}
-      >
+      <div className={`bg-main-bg min-h-screen w-full ${activeMenu ? "md:ml-72" : "flex-2"}`}>
         <div className="fixed md:static navbar w-full">
           <Navbar />
         </div>
-
+        
         <Routes>
           <Route index path="/" element={<Home />} />
 
@@ -45,6 +42,7 @@ const App = () => {
           <Route path="/monthly/usage" element={<UsageAnalysis />} />
           <Route path="/day/report" element={<DayReport />} />
         </Routes>
+      </div>
       </div>
     </BrowserRouter>
   );
