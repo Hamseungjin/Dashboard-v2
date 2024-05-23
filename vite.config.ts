@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://openapi.seoul.go.kr:8088',
+        target: 'https://openapi.seoul.go.kr:8088',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }
