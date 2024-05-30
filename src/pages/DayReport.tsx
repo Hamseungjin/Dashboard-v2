@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../components/Loader';
 import FailureTypePieChart from '../components/charts/FailureTypePieChart';
 import { GoDotFill } from "react-icons/go";
-import AreaChartCopyComponent from '../components/charts/AreaChartCopy';
+import AreaChartComponent from '../components/charts/AreaChart';
 import AgeTypePieChart from '../components/charts/AgeTypePieChart';
 import TimeBarChart from '../components/charts/TimeBarChart';
 import { FailureTimeType, FailureTypesType, UsageAgeType, UsageTimeType } from '../types';
@@ -322,7 +322,7 @@ const DayReport = () => {
               <div className='2xl:w-[630px] flex-1 border bg-white rounded-lg shadow-lg py-4 px-6'>
                 <h3 className='pb-8 px-2 w-full text-slate-500'>고장 접수 시간대 분석</h3>
                 <div className='h-[320px] relative'>
-                  <AreaChartCopyComponent data={failureTimesArr} />
+                  <AreaChartComponent data={failureTimesArr} />
                 </div>
               </div>
 

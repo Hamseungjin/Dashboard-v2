@@ -21,7 +21,7 @@ type Props = {
   data : FailureTimeType[]
 }
 
-const AreaChartCopyComponent = ({data}: Props) => {
+const AreaChartComponent = ({data}: Props) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <AreaChart width={500} height={400} data={data} className='absolute -left-6 -bottom-1'>
@@ -45,4 +45,4 @@ const AreaChartCopyComponent = ({data}: Props) => {
 }
 
 
-export default AreaChartCopyComponent
+export default AreaChartComponent
