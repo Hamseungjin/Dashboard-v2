@@ -55,9 +55,9 @@ const DayReport = () => {
       const fetchData = async() => {
         try{
           // 일별 고장 이력
-          const dayFailureUrl = `http://openapi.seoul.go.kr:8088/${import.meta.env.VITE_API_KEY}/json/tbCycleFailureReport/1/1000/${date}`
+          const dayFailureUrl = `/api/${import.meta.env.VITE_API_KEY}/json/tbCycleFailureReport/1/1000/${date}`
           // 일별 사용 이력
-          const dayUsageUrl = `http://openapi.seoul.go.kr:8088/${import.meta.env.VITE_API_KEY}/json/tbCycleRentUseDayInfo/1/1000/${date}`
+          const dayUsageUrl = `/api/${import.meta.env.VITE_API_KEY}/json/tbCycleRentUseDayInfo/1/1000/${date}`
         
           setIsLoading(true);
           const {data: failureData } = await axios.get(dayFailureUrl);
