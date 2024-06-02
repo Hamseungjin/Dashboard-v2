@@ -5,9 +5,9 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
-import { UsageListType } from '../../types';
-
+} from "recharts";
+import { UsageListType } from "../../types";
+import Loader from "../Loader";
 
 const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -19,8 +19,7 @@ const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
           <span className="ml-2">{payload[0].value.toFixed(1)} (km)</span>
         </p>
         <p className="text-sm text-indigo-400">
-          이용 시간 합산 :
-          <span className="ml-2">{payload[1].value} 분</span>
+          이용 시간 합산 :<span className="ml-2">{payload[1].value} 분</span>
         </p>
       </div>
     );
@@ -28,26 +27,31 @@ const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
 };
 
 type Props = {
-  topFiveData: UsageListType[]
-}
+  topFiveData: UsageListType[];
+  isLoading: boolean;
+};
 
-const MontlyUsageBarChart = ({topFiveData} : Props) => {
+const MontlyUsageBarChart = ({ topFiveData, isLoading }: Props) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart
-        width={500}
-        height={300}
-        data={topFiveData}
-        margin={{right: 30}}
-      >
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="use_dist" fill='#395C6B' stackId="1" />
-        <Bar dataKey="use_time" fill='#22A699' stackId="1" />
-      </BarChart>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <BarChart
+          width={500}
+          height={300}
+          data={topFiveData}
+          margin={{ right: 30 }}
+        >
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="use_dist" fill="#395C6B" stackId="1" />
+          <Bar dataKey="use_time" fill="#22A699" stackId="1" />
+        </BarChart>
+      )}
     </ResponsiveContainer>
-  )
-}
+  );
+};
 
-export default MontlyUsageBarChart
+export default MontlyUsageBarChart;

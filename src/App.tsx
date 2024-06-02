@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./context/contextProvider";
 import SideBar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
-import UsageAnalysis from './pages/UsageAnalysis';
+import MonthlyReport from './pages/MonthlyReport';
 import ReturnBike from './pages/ReturnBike';
 import RentBike from './pages/RentBike';
 import DayReport from './pages/DayReport';
@@ -39,7 +39,7 @@ const App = () => {
           <Route path="/search/station" element={<SearchStation />} />
 
           {/* analysis */}
-          <Route path="/monthly/usage" element={<UsageAnalysis />} />
+          <Route path="/monthly/usage" element={<MonthlyReport />} />
           <Route path="/day/report" element={<DayReport />} />
         </Routes>
       </div>

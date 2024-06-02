@@ -1,29 +1,35 @@
+import UserAnalysisThumb from "../UserAnalysisThumb"
+import TotalRentalCnt from "./TotalRentalCnt"
+import { MdOutlineSupervisorAccount } from "react-icons/md";
+import { BsBoxSeam } from "react-icons/bs";
+import { FiBarChart } from "react-icons/fi";
+import { HiOutlineRefresh } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import DropDownSelect from "../components/DropDownSelect";
-import formatData from "../components/utils/formatData";
-import BottomComponent from "../components/monthly/BottomComponent";
-import TopComponent from "../components/monthly/TopComponent";
 
-const keyConfig = {
-  API_KEY: import.meta.env.VITE_API_KEY,
-};
+type Props = {
+  month: number
+}
 
-const MonthlyReport = () => {
-  const [month, setMonth] = useState<number>(202312);
+const TopComponent = ({month}: Props) => {
   const [totalRentCnt, setTotalRentCnt] = useState<number>(0); // 한달간 총 대여 수
   const [totalMoveTime, setTotalMoveTime] = useState<number>(0); // 이용 시간 총합 (평균 이용 시간 구할 때 사용)
   const [totalMoveDist, setTotalMoveDist] = useState<number>(0); // 이동거리 총합 (평균 이동 시간 구할 때 사용)
   const [totalSavedCarb, setTotalSavedCarb] = useState<number>(0); // 총 절약 탄소량
-  const [topFiveStation, setTopFiveStation] = useState<any>([]);
-
   const [responseArr, setResponseArr] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const keyConfig = {
+    API_KEY: import.meta.env.VITE_API_KEY,
+  };
 
   const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const { data } = await axios.get(url);
         const response = data.cycleRentUseMonthInfo;
         
@@ -72,7 +78,7 @@ const MonthlyReport = () => {
           }
         });
 
-        setTopFiveStation(findTopStations);
+        setIsLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -80,29 +86,44 @@ const MonthlyReport = () => {
     fetchData();
   }, [month]);
 
-
   return (
-    <div className="my-12 relative">
-      {/* select box & text */}
-      <div className="flex items-center w-full justify-center">
-        <DropDownSelect
-          options={[202312, 202311, 202310, 202309, 202308]}
-          month={month}
-          setMonth={setMonth}
-        />
-        <p className="relative px-4 text-center text-slate-500">
-          해당 통계는 {formatData(month)}, 서울의 1000개의 따릉이 대여소를
-          기반으로 분석한 자료입니다.
-        </p>
+    <div className="flex flex-wrap justify-center relative pt-8">
+        {/* 총 대여 건수 container */}
+        <TotalRentalCnt responseArr={responseArr} setTotalRentCnt={setTotalRentCnt} totalRentCnt={totalRentCnt} />
+
+        {/* 이용 & 이동 평균, 탄소, 나무 box - 4개 */}
+        <div className="flex m-3 flex-wrap justify-center gap-1 items-center">
+          <UserAnalysisThumb
+            title="이용시간 평균"
+            iconColor="#03C9D7"
+            iconBg="#E5FAFB"
+            amount={`${Math.floor(totalMoveTime / totalRentCnt)} 분`}
+            icon={<MdOutlineSupervisorAccount />}
+          />
+          <UserAnalysisThumb
+            title="이용거리 평균"
+            iconColor="rgb(255, 244, 229)"
+            iconBg="rgb(254, 201, 15)"
+            amount={`${Math.floor(totalMoveDist / totalRentCnt)} 미터`}
+            icon={<BsBoxSeam />}
+          />
+          <UserAnalysisThumb
+            title="탄소 절감량 총합"
+            iconColor="rgb(228, 106, 118)"
+            iconBg="rgb(255, 244, 229)"
+            amount={`${totalSavedCarb} kg`}
+            icon={<FiBarChart />}
+          />
+          <UserAnalysisThumb
+            title="살린 나무의 수 (1그루=6.6kg)"
+            iconColor="rgb(0, 194, 146)"
+            iconBg="rgb(235, 250, 242)"
+            amount={`${Math.floor(totalSavedCarb / 6.6)} 그루`}
+            icon={<HiOutlineRefresh />}
+          />
+        </div>
       </div>
+  )
+}
 
-      {/* 상단 : 총 대여 건수 / 박스 4개 */}
-      <TopComponent month={month} />
-
-      {/* 하단의 컴포넌트 : 탑 5대여소 비교 분석 차트 2개 & 통계 요약 */}
-      <BottomComponent topFiveStation={topFiveStation} month={month} totalRentCnt={totalRentCnt} />
-    </div>
-  );
-};
-
-export default MonthlyReport;
+export default TopComponent
