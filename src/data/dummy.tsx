@@ -34,12 +34,12 @@ export const links = [
     icon: <TbDeviceAnalytics />,
     links: [
       {
-        name: '고장 및 대여 이력 (일별)',
-        linkTo: '/day/report',
-      },
-      {
         name: '이용정보 (월별)',
         linkTo: '/monthly/usage',
+      },
+      {
+        name: '고장 및 대여 이력 (일별)',
+        linkTo: '/day/report',
       },
     ],
   },

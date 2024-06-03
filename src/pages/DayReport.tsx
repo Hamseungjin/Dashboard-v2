@@ -208,7 +208,7 @@ const DayReport = () => {
     return (
       <div className="w-full h-screen flex items-center justify-center gap-4">
         <Loader />
-        <p className="text-2xl font-black">{`${date.slice(0,4)}년 ${date.slice(4,6)}월 ${date.slice(6,8)}일의 통계를 불러오는 중입니다. . .`}</p>
+        <p className="text-2xl font-semibold">{`${date.slice(0,4)}년 ${date.slice(4,6)}월 ${date.slice(6,8)}일의 통계를 불러오는 중입니다. . .`}</p>
       </div>
     )
   }
@@ -222,13 +222,13 @@ const DayReport = () => {
 
           {/* 일별 통계 & 기준 일자 & 기준 일자 변경 */}
           <div className='flex items-center justify-between gap-8 w-full bg-white border pb-2.5 px-8 rounded-lg shadow-lg'>
-            <h1 className=' text-3xl font-black'>일별 통계</h1>
+            <h1 className=' text-3xl font-semibold'>일별 통계</h1>
             <div className='flex flex-col text-slate-500'>
               <p className='self-end'>기준 일자 : <span className=' text-base font-black text-black'>{`${date.slice(0,4)}년 ${date.slice(4,6)}월 ${date.slice(6,8)}일`}</span></p>
               <input 
                 type="number"
                 placeholder='YYYYMMDD 형태로 기준 일자 입력 ex) 20240203' 
-                className='focus:none w-[300px] placeholder:text-slate-500 text-black placeholder:text-sm mt-2 border-b-1 border-slate-500 pb-1' 
+                className='focus:none w-[315px] placeholder:text-slate-500 text-black placeholder:text-sm mt-2 border-b-1 border-slate-500 pb-1' 
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleSubmitNumber}
               />

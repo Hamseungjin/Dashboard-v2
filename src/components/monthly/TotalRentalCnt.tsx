@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import patterImg from "/images/vector_pattern.svg";
-import Loader from "../Loader";
 
 type Props = {
   isLoading: boolean,
