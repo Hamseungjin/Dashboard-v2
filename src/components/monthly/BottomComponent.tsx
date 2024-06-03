@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import Analysis from "./Analysis";
 import MontlyStationComparisonChart from "./MontlyStationComparisonChart";
+import axios from "axios";
 
 type Props = {
-  topFiveStation: any;
   month: number;
-  totalRentCnt: number;
 };
 
 interface List {
@@ -16,9 +15,16 @@ interface List {
   use_cnt: number;
 }
 
-const BottomComponent = ({topFiveStation, month, totalRentCnt,}: Props) => {
+const BottomComponent = ({ month }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [topFiveList, setTopFiveList] = useState<List[]>(undefined!);
+  const [topFiveStation, setTopFiveStation] = useState<any>([]);
+  const [totalRentCnt, setTotalRentCnt] = useState<number>(0); // 한달간 총 대여 수
+
+  const keyConfig = {
+    API_KEY: import.meta.env.VITE_API_KEY,
+  };
+  const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
 
   // 탑 5 정류장(topFiveStation)에서 필요한 데이터만 추출
   const selectDataFromTopFive = () => {
@@ -34,13 +40,50 @@ const BottomComponent = ({topFiveStation, month, totalRentCnt,}: Props) => {
     setTopFiveList(topFiveData);
   };
 
+  // 비동기 데이터 fetching
+  const fetchData = async () => {
+    const { data } = await axios.get(url);
+    const response = data.cycleRentUseMonthInfo;
+
+    let findTopStations: any = [];
+
+    response.row.map((info: any) => {
+      let totalRentCntSum = 0;
+      // 총 대여수 구하기
+      // 대여수 USE_CNT
+      totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
+      setTotalRentCnt(totalRentCntSum);
+
+      // top 5 대여소 안에 드는지 확인
+      if (
+        findTopStations.length < 5 ||
+        info.USE_CNT >
+          parseInt(findTopStations[findTopStations.length - 1].USE_CNT)
+      ) {
+        findTopStations.push(info);
+        findTopStations.sort(
+          (a: any, b: any) => parseInt(b.USE_CNT) - parseInt(a.USE_CNT)
+        );
+
+        if (findTopStations.length > 5) findTopStations.pop();
+      }
+    });
+    setTopFiveStation(findTopStations);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     setIsLoading(true);
-    if (topFiveStation) {
+    fetchData();
+  }, [month]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (topFiveStation.length > 0) {
       selectDataFromTopFive();
-      setIsLoading(false);
     }
-  }, [topFiveStation]);
+    setIsLoading(false);
+  }, [topFiveStation])
 
   return (
     <div className="flex flex-wrap gap-8 items-center justify-center my-2 px-4">
@@ -54,7 +97,10 @@ const BottomComponent = ({topFiveStation, month, totalRentCnt,}: Props) => {
         </>
 
         {/* charts */}
-        <MontlyStationComparisonChart topFiveList={topFiveList} isLoading={isLoading} />
+        <MontlyStationComparisonChart
+          topFiveList={topFiveList}
+          isLoading={isLoading}
+        />
       </section>
 
       <section className="flex flex-col gap-6 w-[900px]">

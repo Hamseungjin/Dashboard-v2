@@ -7,7 +7,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { UsageListType } from "../../types";
-import Loader from "../Loader";
 
 const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -28,15 +27,11 @@ const CustomTooltip: React.FC<any> = ({ active, payload, label }) => {
 
 type Props = {
   topFiveData: UsageListType[];
-  isLoading: boolean;
 };
 
-const MontlyUsageBarChart = ({ topFiveData, isLoading }: Props) => {
+const MontlyUsageBarChart = ({ topFiveData }: Props) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      {isLoading ? (
-        <Loader />
-      ) : (
         <BarChart
           width={500}
           height={300}
@@ -49,7 +44,6 @@ const MontlyUsageBarChart = ({ topFiveData, isLoading }: Props) => {
           <Bar dataKey="use_dist" fill="#395C6B" stackId="1" />
           <Bar dataKey="use_time" fill="#22A699" stackId="1" />
         </BarChart>
-      )}
     </ResponsiveContainer>
   );
 };

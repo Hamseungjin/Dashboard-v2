@@ -3,13 +3,13 @@ import patterImg from "/images/vector_pattern.svg";
 import Loader from "../Loader";
 
 type Props = {
+  isLoading: boolean,
   responseArr: any,
   totalRentCnt: number,
   setTotalRentCnt: React.Dispatch<React.SetStateAction<number>>,
 }
 
-const TotalRentalCnt = ({ responseArr, totalRentCnt, setTotalRentCnt }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
+const TotalRentalCnt = ({isLoading, responseArr, totalRentCnt, setTotalRentCnt }: Props) => {
   // 한달간 총 대여 수
 
   // 총 대여수 계산
@@ -22,9 +22,9 @@ const TotalRentalCnt = ({ responseArr, totalRentCnt, setTotalRentCnt }: Props) =
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    CalcTotalRent();
-    setIsLoading(false);
+    if(responseArr){
+      CalcTotalRent();
+    }
   }, [responseArr]);
 
   return (
@@ -36,11 +36,16 @@ const TotalRentalCnt = ({ responseArr, totalRentCnt, setTotalRentCnt }: Props) =
       />
       <div className="flex flex-col z-[2] relative">
         <p className="font-bold text-gray-600 mb-4">총 대여 건수</p>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <p className="text-2xl">{totalRentCnt.toLocaleString("ko-KR")}회</p>
-        )}
+          <p className="text-2xl flex">
+            {isLoading ? (
+              <span className="mr-3 animate-pulse text-gray-400">
+                ????
+              </span>
+            ): (
+              <span>{totalRentCnt.toLocaleString("ko-KR")}</span>
+            )}
+            회
+          </p>
       </div>
     </div>
   );

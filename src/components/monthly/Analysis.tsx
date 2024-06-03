@@ -13,7 +13,10 @@ const Analysis = ({ isLoading, month, topFiveList, totalRentCnt }: Props) => {
     <>
       <p className="font-semibold text-xl pb-6 border-b">[ 통계 요약 ]</p>
       {isLoading || !topFiveList ? (
-        <Loader />
+        <div className="mt-20 flex gap-4 items-center ml-6">
+          <Loader />
+          <p className="font-semibold text-lg animate-pulse">통계를 요약하는 중입니다. . .</p>
+        </div>
       ) : (
         <>
           <p className="pt-6 mb-3">

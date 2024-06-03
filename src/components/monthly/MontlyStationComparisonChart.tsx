@@ -1,6 +1,7 @@
 import LineChartContainer from "./LineChartContainer";
 import { GoDotFill } from "react-icons/go";
 import MontlyUsageBarChart from "../charts/MontlyUsageBarChart";
+import Loader from "../Loader";
 
 type Props = {
   topFiveList: any,
@@ -30,7 +31,14 @@ const MontlyStationComparisonChart = ({ isLoading, topFiveList }: Props) => {
 
         {/* bar chart container */}
         <div className="w-[400px] h-[360px]">
-          <MontlyUsageBarChart topFiveData={topFiveList} isLoading={isLoading} />
+          {isLoading || !topFiveList ? (
+            <div className="flex gap-4 min-h-60 items-center justify-center font-semibold text-lg">
+              <Loader />
+            <p className="animate-pulse">차트를 그리는 중입니다. . .</p>
+          </div>
+          ): (
+            <MontlyUsageBarChart topFiveData={topFiveList}  />
+          )}
         </div>
       </div>
     </div>
