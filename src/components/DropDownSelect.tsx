@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
+import React, { useCallback, useState } from "react";
 import formatData from "./utils/formatData";
+
+// icons
+import { TiArrowSortedDown } from "@react-icons/all-files/ti/TiArrowSortedDown";
+import {TiArrowSortedUp} from "@react-icons/all-files/ti/TiArrowSortedUp"
 
 type Props = {
   options: number[],
@@ -10,6 +13,10 @@ type Props = {
 
 const DropDownSelect = ({options, setMonth, month} : Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const memoziedMonth = useCallback((option: number) => {
+    setMonth(option)
+  }, [])
 
   return (
     <div className="relative z-20">
@@ -27,7 +34,7 @@ const DropDownSelect = ({options, setMonth, month} : Props) => {
               key={option} 
               className="cursor-pointer hover:bg-primary-500 hover:text-white px-4 py-2 rounded-md"
               onClick={() => {
-                setMonth(option);
+                memoziedMonth(option);
                 setIsExpanded(!isExpanded)
               }}
             >

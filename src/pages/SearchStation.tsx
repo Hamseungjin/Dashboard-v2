@@ -77,7 +77,6 @@ const SearchStation = () => {
         }
       });
       setSearchResult(nearByStations);
-      // console.log('가까운 대여소 :',nearByStations);
 
       setIsLoading(false);
     };

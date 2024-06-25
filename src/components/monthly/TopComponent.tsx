@@ -1,11 +1,14 @@
 import UserAnalysisThumb from "../UserAnalysisThumb";
 import TotalRentalCnt from "./TotalRentalCnt";
-import { MdOutlineSupervisorAccount } from "react-icons/md";
-import { BsBoxSeam } from "react-icons/bs";
-import { FiBarChart } from "react-icons/fi";
-import { HiOutlineRefresh } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
+// icons
+import { MdSupervisorAccount } from "@react-icons/all-files/md/MdSupervisorAccount";
+import { BsBoxSeam } from "react-icons/bs";
+import { FiBarChart } from "@react-icons/all-files/fi/FiBarChart"
+import { HiOutlineRefresh } from "@react-icons/all-files/hi/HiOutlineRefresh"
+
 
 type Props = {
   month: number;
@@ -25,51 +28,52 @@ const TopComponent = ({ month }: Props) => {
 
   const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
 
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(url);
+      const response = data.cycleRentUseMonthInfo;
+
+      setResponseArr(data.cycleRentUseMonthInfo.row);
+
+      let totalMoveTimeSum = 0;
+      let totalMoveDistSum = 0;
+      let totalSavedCarbSum = 0;
+      let totalRentCntSum = 0;
+
+      response.row.map((info: any) => {
+        // 총 대여수 구하기
+        // 대여수 USE_CNT
+        totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
+        setTotalRentCnt(totalRentCntSum);
+
+        // 이용시간 전체 평균
+        // MOVE_TIME의 총합 / 총 대여수
+        // 단위는 분(min)
+        totalMoveTimeSum += info.MOVE_TIME ? parseInt(info.MOVE_TIME) : 0;
+        setTotalMoveTime(totalMoveTimeSum);
+
+        // 이동거리 전체 평균
+        // MOVE_METER / 총 대여수
+        // 단위는 미터(m) - Math.floor로 내림하기
+        totalMoveDistSum += info.MOVE_METER
+          ? Math.floor(parseInt(info.MOVE_METER))
+          : 0;
+        setTotalMoveDist(totalMoveDistSum);
+
+        // 총 탄소 절감량
+        // CARBON_AMT 의 total
+        // 단위는 킬로그램(kg)
+        totalSavedCarbSum += info.CARBON_AMT ? parseInt(info.CARBON_AMT) : 0;
+        setTotalSavedCarb(totalSavedCarbSum);
+      });
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const { data } = await axios.get(url);
-        const response = data.cycleRentUseMonthInfo;
-
-        setResponseArr(data.cycleRentUseMonthInfo.row);
-
-        let totalMoveTimeSum = 0;
-        let totalMoveDistSum = 0;
-        let totalSavedCarbSum = 0;
-        let totalRentCntSum = 0;
-
-        response.row.map((info: any) => {
-          // 총 대여수 구하기
-          // 대여수 USE_CNT
-          totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
-          setTotalRentCnt(totalRentCntSum);
-
-          // 이용시간 전체 평균
-          // MOVE_TIME의 총합 / 총 대여수
-          // 단위는 분(min)
-          totalMoveTimeSum += info.MOVE_TIME ? parseInt(info.MOVE_TIME) : 0;
-          setTotalMoveTime(totalMoveTimeSum);
-
-          // 이동거리 전체 평균
-          // MOVE_METER / 총 대여수
-          // 단위는 미터(m) - Math.floor로 내림하기
-          totalMoveDistSum += info.MOVE_METER
-            ? Math.floor(parseInt(info.MOVE_METER))
-            : 0;
-          setTotalMoveDist(totalMoveDistSum);
-
-          // 총 탄소 절감량
-          // CARBON_AMT 의 total
-          // 단위는 킬로그램(kg)
-          totalSavedCarbSum += info.CARBON_AMT ? parseInt(info.CARBON_AMT) : 0;
-          setTotalSavedCarb(totalSavedCarbSum);
-        });
-        setIsLoading(false);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchData();
   }, [month]);
 
@@ -91,7 +95,7 @@ const TopComponent = ({ month }: Props) => {
           iconColor="#03C9D7"
           iconBg="#E5FAFB"
           amount={`${Math.floor(totalMoveTime / totalRentCnt)} 분`}
-          icon={<MdOutlineSupervisorAccount />}
+          icon={<MdSupervisorAccount />}
         />
         <UserAnalysisThumb
           isLoading={isLoading}

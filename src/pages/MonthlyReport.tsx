@@ -1,12 +1,46 @@
-import { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import DropDownSelect from "../components/DropDownSelect";
 import formatData from "../components/utils/formatData";
-import BottomComponent from "../components/monthly/BottomComponent";
+import axios from "axios";
+import Loader from "../components/Loader";
 import TopComponent from "../components/monthly/TopComponent";
-
+import BottomComponent from "../components/monthly/BottomComponent";
 
 const MonthlyReport = () => {
-  const [month, setMonth] = useState<number>(202312);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // 데이터 로딩 상태를 관리할 상태
+  const [bikeData, setBikeData] = useState(null!);
+  const [month, setMonth] = useState<number>(() => {
+    return 202312;
+  });
+
+  const keyConfig = {
+    API_KEY: import.meta.env.VITE_API_KEY,
+  };
+
+  const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
+
+
+  const fetchData = useCallback(async () => {
+    const {data} = await axios.get(url);
+    setBikeData(data);
+    setIsLoading(false);
+  }, [month])
+
+  useEffect(() => {
+    fetchData();
+  }, [month]);
+
+  if (isLoading) {
+    return (
+      <div className="h-full w-full flex items-center justify-center gap-4 text-2xl">
+        <Loader /> 
+        <span className=" animate-pulse text-slate-600">
+          {month.toString().slice(0, 4)}년 {month.toString().slice(4, 6)}월의 데이터를 받아오는 중입니다. . .
+        </span>
+      </div>
+    )
+  }
+  console.log(bikeData);
 
   return (
     <div className="my-12 relative">
@@ -28,8 +62,9 @@ const MonthlyReport = () => {
 
       {/* 하단의 컴포넌트 : 탑 5대여소 비교 분석 차트 2개 & 통계 요약 */}
       <BottomComponent month={month} />
+
     </div>
   );
 };
 
-export default MonthlyReport;
+export default React.memo(MonthlyReport);

@@ -1,8 +1,8 @@
-import { FiAlertCircle } from 'react-icons/fi';
+import { FiAlertCircle } from '@react-icons/all-files/fi/FiAlertCircle';
 import { IoMdApps, IoMdContacts } from 'react-icons/io';
 import { TbDeviceAnalytics } from "react-icons/tb";
-import { FaRegCheckCircle } from 'react-icons/fa';
-import { FaArrowRotateRight } from 'react-icons/fa6';
+import { FaRegCheckCircle } from '@react-icons/all-files/fa/FaRegCheckCircle';
+import { FaArrowCircleDown } from '@react-icons/all-files/fa/FaArrowCircleDown';
 import { IoLockClosedOutline, IoLockOpenOutline } from 'react-icons/io5';
 import { LuParkingCircle } from "react-icons/lu";
 
@@ -62,7 +62,7 @@ export const rentStepsData = [
     color: 'text-primary-dark-green',
   },
   {
-    icon: <FaArrowRotateRight />,
+    icon: <FaArrowCircleDown />,
     title: "대여하기",
     subText: "<대여하기>를 누르고 단말기 QR코드를 스캔합니다. 단말기는 따릉이 뒷바퀴 상단부에 있습니다.",
     bgColor: 'bg-primary-orange',

@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useStateContext } from "../context/contextProvider";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+
+// icons
+import { FaArrowRight } from "@react-icons/all-files/fa/FaArrowRight";
+import {FaArrowLeft} from "@react-icons/all-files/fa/FaArrowLeft";
 
 const Navbar = () => {
   const {activeMenu, setActiveMenu, screenSize, setScreenSize} = useStateContext();

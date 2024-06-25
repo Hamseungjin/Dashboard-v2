@@ -1,4 +1,4 @@
-import { GrBike } from "react-icons/gr";
+import { GrBike } from "@react-icons/all-files/gr/GrBike";
 
 type Props = {
   bikes: string;

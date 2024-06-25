@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
-import { SiShazam } from "react-icons/si";
+import { SiShazam } from "@react-icons/all-files/si/SiShazam"
+
 import { links } from '../data/dummy';
 import { useStateContext } from '../context/contextProvider';
 
