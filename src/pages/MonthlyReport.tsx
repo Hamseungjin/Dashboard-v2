@@ -19,12 +19,11 @@ const MonthlyReport = () => {
 
   const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
 
-
   const fetchData = useCallback(async () => {
-    const {data} = await axios.get(url);
+    const { data } = await axios.get(url);
     setBikeData(data);
     setIsLoading(false);
-  }, [month])
+  }, [month]);
 
   useEffect(() => {
     fetchData();
@@ -33,12 +32,12 @@ const MonthlyReport = () => {
   if (isLoading) {
     return (
       <div className="h-full w-full flex items-center justify-center gap-4 text-2xl">
-        <Loader /> 
-        <span className=" animate-pulse text-slate-600">
+        <Loader />
+        <span className="animate-pulse text-slate-600">
           {month.toString().slice(0, 4)}년 {month.toString().slice(4, 6)}월의 데이터를 받아오는 중입니다. . .
         </span>
       </div>
-    )
+    );
   }
   console.log(bikeData);
 
@@ -57,12 +56,11 @@ const MonthlyReport = () => {
         </p>
       </div>
 
-      {/* 상단 : 총 대여 건수 / 박스 4개 */}
-      <TopComponent month={month} />
-
       {/* 하단의 컴포넌트 : 탑 5대여소 비교 분석 차트 2개 & 통계 요약 */}
       <BottomComponent month={month} />
 
+      {/* 상단 : 총 대여 건수 / 박스 4개 */}
+      <TopComponent month={month} />
     </div>
   );
 };
