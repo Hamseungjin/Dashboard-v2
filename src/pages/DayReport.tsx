@@ -1,13 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Loader from '../components/Loader';
-import FailureTypePieChart from '../components/charts/FailureTypePieChart';
+// import FailureTypePieChart from '../components/charts/FailureTypePieChart';
 import { GoDotFill } from "react-icons/go";
 import AreaChartComponent from '../components/charts/AreaChart';
 import AgeTypePieChart from '../components/charts/AgeTypePieChart';
-import TimeBarChart from '../components/charts/TimeBarChart';
+// import TimeBarChart from '../components/charts/TimeBarChart';
 import { FailureTimeType, FailureTypesType, UsageAgeType, UsageTimeType } from '../types';
 import PieChartKey from '../components/charts/PieChartKey';
+import TimePieChart from '../components/charts/TimePieChart';
+import FailureTypeTreeMapChart from '../components/charts/FailureTypeTreeMapChart';
 
 // 어제 날짜를 YYYYMMDD 형식으로 반환하는 함수
 const getYesterdayDate = () => {
@@ -28,6 +30,7 @@ const DayReport = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [totalFailure, setTotalFailure] = useState<number>(0);
   const COLORS = ['#00C49F', '#0088FE', '#FFBB28', '#FF8042', '#F03A47', '#395C6B'];
+  const COLORSpie = ['#00C49F', '#0088FE', '#FFBB28', '#FF8042'];
 
   let failureTypeMap = new Map();
   const [failureTypesArr, setFailureTypesArr] = useState<any>();
@@ -243,15 +246,17 @@ const DayReport = () => {
             <div className="flex flex-wrap gap-4">
 
               {/* 1-1. 고장 유형 */}
-              <div className="border bg-white shadow-lg rounded-lg w-full 2xl:w-[541px] py-4 px-8">
-                <h3 className='border-b pb-4 w-full text-slate-500'>고장 유형</h3>
-                
-                <div className='flex items-center justify-center gap-16 pr-8 py-8'>
-                  <FailureTypePieChart data={failureTypesArr} colors={COLORS} />
-                  <div className='flex flex-col gap-6'>
-                    <h1 className='text-xl font-black'>총 고장 횟수 : {totalFailure} 번</h1>
-                    {/* 고장 유형 리스트 */}
-                    <div className='flex flex-col gap-2 text-primary-500'>
+            <div className="border bg-white shadow-lg rounded-lg w-full 2xl:w-[541px] py-4 px-8">
+              <h3 className='border-b pb-4 w-full text-slate-500'>고장 유형</h3>
+              
+              <div className='flex items-center justify-center gap-16 pr-8 py-8'>
+                <FailureTypeTreeMapChart data={failureTypesArr} colors={COLORS} />
+                <div className='flex flex-col gap-6'>
+                  <h1 className='text-xl font-black'>총 고장 횟수 : {totalFailure} 번</h1>
+                  {/* 고장 유형 리스트 */}
+                  <div className='flex flex-col gap-2 text-primary-500'>
+
+  
 
                       {/* pie key 01 */}
                       <div className=' text-[#0088FE]'>
@@ -264,7 +269,7 @@ const DayReport = () => {
                       </div>
                       
                       {/* pie key 02 */}
-                      <div className=' text-[#00C49F]'>
+                      <div className=' text-[#78B2F7]'>
                         <PieChartKey 
                           key={failureTypesArr[1].type} 
                           type={failureTypesArr[1].type}
@@ -274,7 +279,7 @@ const DayReport = () => {
                       </div>
 
                       {/* pie key 03 */}
-                      <div className=' text-[#FFBB28]'>
+                      <div className=' text-[#72D6C7]'>
                         <PieChartKey 
                           key={failureTypesArr[2].type} 
                           type={failureTypesArr[2].type}
@@ -284,7 +289,7 @@ const DayReport = () => {
                       </div>
 
                       {/* pie key 04 */}
-                      <div className=' text-[#FF8042]'>
+                      <div className=' text-[#61BF67]'>
                         <PieChartKey 
                           key={failureTypesArr[3].type} 
                           type={failureTypesArr[3].type}
@@ -294,7 +299,7 @@ const DayReport = () => {
                       </div>
 
                       {/* pie key 05 */}
-                      <div className=' text-[#F03A47]'>
+                      <div className=' text-[#8AD896]'>
                         <PieChartKey 
                           key={failureTypesArr[4].type} 
                           type={failureTypesArr[4].type}
@@ -304,7 +309,7 @@ const DayReport = () => {
                       </div>
 
                       {/* pie key 06 */}
-                      <div className=' text-[#395C6B]'>
+                      <div className=' text-[#ABE46F]'>
                         <PieChartKey 
                           key={failureTypesArr[5].type} 
                           type={failureTypesArr[5].type}
@@ -337,10 +342,9 @@ const DayReport = () => {
               <div className="bg-white rounded-lg border shadow-lg w-full 2xl:max-w-fit p-4 px-8">
                 <h3 className='pb-4 w-full flex justify-end text-slate-500'>이용 시간 통계</h3>
                 <div className='relative w-full 2xl:w-[420px] h-[300px]'>
-                  <TimeBarChart data={usageTimesArr} />
+                  <TimePieChart data={usageTimesArr} colors={COLORSpie} />
                 </div>
               </div>
-
               {/* 2-2. 대여 연령대 */}
               <div className="bg-white border w-full shadow-lg 2xl:max-w-fit rounded-lg p-4 px-8">
                 <h3 className='border-b pb-4 w-full text-slate-500'>대여 연령대</h3>
