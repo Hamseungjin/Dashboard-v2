@@ -19,9 +19,29 @@ export type LocationInfoType = {
 const SearchStation = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [searchResult, setSearchResult] = useState<any[]>();
+  const [searchResult, setSearchResult] = useState<any[]>([]);
   const [searchLocation, setSearchLocation] = useState<LocationInfoType>();
   const [showResults, setShowResults] = useState<boolean>(false);
+
+  const fetchDdarungiData = async () => {
+    setIsLoading(true);
+    try {
+      const data1 = await axios.get(
+        "http://openapi.seoul.go.kr:8088/5a565a784f6a6968313235666f786272/json/bikeList/1/500/"
+      );
+      const data2 = await axios.get(
+        "http://openapi.seoul.go.kr:8088/5a565a784f6a6968313235666f786272/json/bikeList/501/1000/"
+      );
+
+      const stationsData = [...data1.data.rentBikeStatus.row, ...data2.data.rentBikeStatus.row];
+      return stationsData;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchInput) {
@@ -44,34 +64,34 @@ const SearchStation = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-      const url = `/api/${import.meta.env.VITE_API_KEY}/json/tbCycleStationInfo/1/1000`;
-      const { data } = await axios.get(url);
-      const response = data.stationInfo.row;
+      if (!searchLocation) return;
 
-      let nearByStations: any[] = [];
-      response.forEach((station: any) => {
-        if (
-          station.STA_LAT >= searchLocation!.lat! - 0.009 &&
-          station.STA_LAT <= searchLocation!.lat! + 0.009 &&
-          station.STA_LONG >= searchLocation!.lon! - 0.009 &&
-          station.STA_LONG <= searchLocation!.lon! + 0.009
-        ) {
-          const formData = {
-            RENT_NO: station.RENT_NO,
-            bikes: station.HOLD_NUM,
-            location: station.RENT_NM,
-            address: station.STA_ADD1 + " " + station.STA_ADD2,
-            lat: station.STA_LAT,
-            lon: station.STA_LONG,
-          };
-          nearByStations.push(formData);
-        }
+      const stationsData = await fetchDdarungiData();
+      const nearByStations = stationsData.filter((station: any) => {
+        const stationLat = parseFloat(station.stationLatitude);
+        const stationLon = parseFloat(station.stationLongitude);
+
+        return (
+          stationLat >= searchLocation.lat! - 0.009 &&
+          stationLat <= searchLocation.lat! + 0.009 &&
+          stationLon >= searchLocation.lon! - 0.009 &&
+          stationLon <= searchLocation.lon! + 0.009
+        );
       });
-      setSearchResult(nearByStations);
-      setIsLoading(false);
+
+      const formattedStations = nearByStations.map((station: any) => {
+        return {
+          RENT_NO: station.stationId,
+          bikes: station.parkingBikeTotCnt,
+          location: station.stationName.split(". ")[1] || station.stationName,
+          lat: station.stationLatitude,
+          lon: station.stationLongitude,
+        };
+      });
+
+      setSearchResult(formattedStations);
     };
-    if (searchLocation) fetchData();
+    fetchData();
   }, [searchLocation]);
 
   return (
@@ -125,7 +145,7 @@ const SearchStation = () => {
                         key={station.RENT_NO}
                         bikes={station.bikes}
                         location={station.location}
-                        address={station.address}
+                        address={station.location} // 주소 대신 대여소 이름만 표시
                       />
                     ))}
                   </div>
