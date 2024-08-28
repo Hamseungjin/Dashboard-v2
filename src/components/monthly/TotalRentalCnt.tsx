@@ -13,15 +13,13 @@ const TotalRentalCnt = ({
   totalRentCnt,
   setTotalRentCnt,
 }: Props) => {
-  // 한달간 총 대여 수
-
-  // 총 대여수 계산
+  // 한달간 총 대여 수 계산
   const CalcTotalRent = () => {
     let totalRentCntSum = 0;
-    responseArr.map((info: any) => {
+    responseArr.forEach((info: any) => {
       totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
-      setTotalRentCnt(totalRentCntSum);
     });
+    setTotalRentCnt(totalRentCntSum);
   };
 
   useEffect(() => {
@@ -31,26 +29,18 @@ const TotalRentalCnt = ({
   }, [responseArr]);
 
   return (
-    <div className="relative border-red border bg-white overflow-hidden shadow-md h-44 rounded-xl w-full max-w-4xl p-8 pt-9 m-3 bg-center">
-      <picture>
-        <source type="image/webp" srcSet="/images/vector_pattern.webp" />
-        <img
-          src="/images/vector_pattern.svg"
-          alt="vector_image"
-          className="absolute -top-2 -right-0 w-[14rem] h-[14rem] z-[1]"
-          loading="lazy"
-        />
-      </picture>
+    <div className="relative bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg h-44 rounded-lg w-full max-w-4xl p-8 m-4">
+      <div className="absolute inset-0 bg-opacity-20 bg-pattern z-[1]"></div>
 
       <div className="flex flex-col z-[2] relative">
-        <p className="font-bold text-gray-600 mb-4">총 대여 건수</p>
-        <p className="text-2xl flex">
+        <p className="font-semibold text-lg mb-4">총 대여 건수</p>
+        <p className="text-3xl font-bold">
           {isLoading ? (
-            <span className="mr-3 animate-pulse text-gray-400">????</span>
+            <span className="animate-pulse">Loading...</span>
           ) : (
             <span>{totalRentCnt.toLocaleString("ko-KR")}</span>
           )}
-          회
+          <span className="text-xl ml-2">회</span>
         </p>
       </div>
     </div>

@@ -1,165 +1,55 @@
-import { PiSneakerMoveBold } from "react-icons/pi";
-import { BiLeaf, BiLogoUpwork } from "react-icons/bi";
-import { FaRegSmile } from "@react-icons/all-files/fa/FaRegSmile"
+import { home } from '../data/dummy';
 
 const Home = () => {
   return (
     <div className="my-20 px-4">
-      <div className="relative border p-4 bg-primary-dark-green shadow-lg rounded-2xl mx-auto max-w-5xl h-[300px]">
-        <div className="p-4 px-8">
-          <p className="text-primary-500 text-xl font-point font-black mt-4 mb-2">
-            자전거와 함께하는 건강한 도시,
-          </p>
-          <p className="text-3xl text-white font-point font-black">
-            세계적인 자전거 도시 서울
-          </p>
-        </div>
-        <picture>
-          <source srcSet="/images/city.svg" type="image/webp" />
-          <img
-            src="/images/city.svg"
-            alt="city_img_svg"
-            loading="lazy"
-            className="absolute right-0 -bottom-6 w-[380px]"
-          />
-        </picture>
-        
-        <button className="absolute -bottom-4 rounded-tr-full -left-4 text-xl bg-primary-500 text-white p-8 pr-14">
-          더 많은 소식 보기
-        </button>
+      {/* 배경 이미지로 변경된 섹션 */}
+      <div 
+        className="relative border p-10 shadow-2xl rounded-3xl mx-auto max-w-5xl h-[450px] bg-cover bg-center"
+        style={{ backgroundImage: `url(/images/background.png)`, backgroundSize: '85%', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center' }} 
+      >
+        <a href="https://www.bikeseoul.com/" target="_blank" rel="noopener noreferrer">
+          <button className="absolute -bottom-6 rounded-full right-8 text-lg bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:from-green-500 hover:via-green-600 hover:to-green-700 text-white py-4 px-10 shadow-md transform transition-transform duration-300 hover:scale-105 font-bold font-sans hover:shadow-lg hover:-translate-y-1">
+            더 많은 소식 보기
+          </button>
+        </a>
       </div>
 
-      {/* list container */}
-      <div className="flex flex-wrap gap-16 gap-y-28 justify-center mx-auto max-w-5xl mt-32">
-        {/* list 01 */}
-        <div className="bg-white w-[450px] h-[300px] border shadow-lg rounded-xl relative">
-          <div className="w-[120px] h-[350px] absolute -top-5 left-9">
-            {/* index container */}
-            <div className="flex flex-col h-full text-white">
-              <div className="bg-primary-500 h-[45px] w-full rounded-b-2xl shadow-lg text-center pt-1 text-lg">
-                vision
-              </div>
-              <div className="text-6xl font-point font-black flex items-center justify-center h-[110px] text-slate-500">
-                01
-              </div>
+      {/* 상단 텍스트 섹션 */}
+      <div className='w-full text-center mb-16 mt-10'>
+        <h2 className='text-4xl font-semibold text-gray-600'>
+          서울자전거는 <span className='text-green-600 font-bold'>누구나, 언제나, 어디서나</span> 쉽고 편리하게 이용할 수 있는 무인대여 시스템입니다.
+        </h2>
+        <p className='text-gray-500 mt-5'>
+          서울시의 교통체증, 대기오염, 고유가 문제를 해결하고 건강한 사회 및 시민들의 삶의 질을 높이고자 마련되었습니다.
+        </p>
+      </div>
 
-              <div className="bg-primary-500 w-full flex-1 rounded-t-2xl shadow-lg px-8">
-                <div className="flex flex-col items-center border-t-[3px] border-white mt-8">
-                  <BiLogoUpwork className="text-[76px] mt-4" />
-                  <p className="text-[1.2rem] font-black">성장</p>
+      {/* 서울 텍스트 섹션 */}
+      <div className='w-full text-center mb-20'>
+        <h1 className='text-5xl font-bold text-green-700'>서울</h1>
+        <p className='text-3xl text-gray-600 mt-3'>자전거와 함께하는 건강한 도시<br />세계적인 자전거 도시</p>
+      </div>
+
+      {/* 방법 요약 */}
+      <div className="w-full max-w-[1200px] flex flex-col items-center gap-16 border rounded-2xl shadow-xl mx-auto p-16 bg-white">
+        {/* 원형 디자인 섹션 */}
+        <div className='flex flex-row justify-center gap-16'>
+          {home.map((list, idx) => (
+            <div key={idx} className='flex flex-col items-center'>
+              {/* 원형 디자인 */}
+              <div className={`flex justify-center items-center ${list.bgColor} rounded-full w-72 h-72 border-4 border-gray-200 transition transform hover:scale-105 hover:shadow-2xl`}>
+                <div className='flex flex-col items-center text-center'>
+                  <div className='text-5xl mb-4 text-white'>{list.icon}</div>
+                  <h2 className='text-xl font-bold text-white'>{list.title}</h2>
+                  <p className='text-base text-white'>{list.subText}</p>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* text container */}
-          <div className="w-[220px] p-4 pt-12 h-full absolute right-0">
-            <p className="text-[1.85rem] border-t-2 border-slate-300 mb-8 pt-4">
-              <p className="text-primary-500 font-black">녹색 성장</p> 선도 도시
-            </p>
-            <p>
-              국가의 비전 중 하나인 "저탄소 녹색 성장"을 실현하기 위해
-              노력합니다.
-            </p>
-          </div>
-        </div>
-
-        {/* list 02 */}
-        <div className="bg-white w-[450px] h-[300px] border shadow-lg rounded-xl relative">
-          <div className="w-[120px] h-[350px] absolute -top-5 left-9">
-            {/* index container */}
-            <div className="flex flex-col h-full text-white">
-              <div className="bg-primary-orange h-[45px] w-full rounded-b-2xl shadow-lg text-center pt-1 text-lg">
-                vision
-              </div>
-              <div className="text-6xl font-point font-black flex items-center justify-center h-[110px] text-slate-500">
-                02
-              </div>
-
-              <div className="bg-primary-orange w-full flex-1 rounded-t-2xl shadow-lg px-8">
-                <div className="flex flex-col items-center border-t-[3px] border-white mt-8">
-                  <BiLeaf className="text-[76px] mt-4" />
-                  <p className="text-lg font-black">깨끗한</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* text container */}
-          <div className="w-[220px] p-4 pt-12 h-full absolute right-0">
-            <p className="text-[1.85rem] border-t-2 border-slate-300 mb-8 pt-4">
-              <p className="text-primary-orange font-black">깨끗한</p> 자전거
-              도시
-            </p>
-            <p>
-              자전거를 통해 교통수단 분담률을 향상시키고 CO2 절감에 기여합니다.
-            </p>
-          </div>
-        </div>
-
-        {/* list 03 */}
-        <div className="bg-white w-[450px] h-[300px] border shadow-lg rounded-xl relative">
-          <div className="w-[120px] h-[350px] absolute -top-5 left-9">
-            {/* index container */}
-            <div className="flex flex-col h-full text-white">
-              <div className="bg-primary-red-orange h-[45px] w-full rounded-b-2xl shadow-lg text-center pt-1 text-lg">
-                vision
-              </div>
-              <div className="text-6xl font-point font-black flex items-center justify-center h-[110px] text-slate-500">
-                03
-              </div>
-
-              <div className="bg-primary-red-orange w-full flex-1 rounded-t-2xl shadow-lg px-8">
-                <div className="flex flex-col items-center border-t-[3px] border-white mt-8">
-                  <PiSneakerMoveBold className="text-[80px] mt-6" />
-                  <p className="text-lg font-black">건강한</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* text container */}
-          <div className="w-[220px] p-4 pt-12 h-full absolute right-0">
-            <p className="text-[1.85rem] border-t-2 border-slate-300 mb-8 pt-4">
-              <p className="text-primary-red-orange font-black">건강한</p>{" "}
-              자전거 도시
-            </p>
-            <p>자전거 이용의 생활화를 통한 시민 건강 증진 실현을 추구합니다.</p>
-          </div>
-        </div>
-
-        {/* list 04 */}
-        <div className="bg-white w-[450px] h-[300px] border shadow-lg rounded-xl relative">
-          <div className="w-[120px] h-[350px] absolute -top-5 left-9">
-            {/* index container */}
-            <div className="flex flex-col h-full text-white">
-              <div className="bg-primary-yellow h-[45px] w-full rounded-b-2xl shadow-lg text-center pt-1 text-lg">
-                vision
-              </div>
-              <div className="text-6xl font-point font-black flex items-center justify-center h-[110px] text-slate-500">
-                04
-              </div>
-
-              <div className="bg-primary-yellow w-full flex-1 rounded-t-2xl shadow-lg px-8">
-                <div className="flex flex-col items-center border-t-[3px] border-white mt-8">
-                  <FaRegSmile className="text-[74px] mt-6" />
-                  <p className="text-lg font-black mt-2">편리한</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* text container */}
-          <div className="w-[220px] p-4 pt-12 h-full absolute right-0">
-            <p className="text-[1.85rem] border-t-2 border-slate-300 mb-8 pt-4">
-              <p className="text-primary-yellow font-black">편리한</p> 자전거
-              도시
-            </p>
-            <p>곳곳에 배치된 자전거로 시민의 이동 편리성 증진에 기여합니다.</p>
-          </div>
+          ))}
         </div>
       </div>
-    </div>
+    </div>    
   );
 };
 

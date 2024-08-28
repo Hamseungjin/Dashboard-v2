@@ -6,19 +6,18 @@ import axios from "axios";
 // icons
 import { MdSupervisorAccount } from "@react-icons/all-files/md/MdSupervisorAccount";
 import { BsBoxSeam } from "react-icons/bs";
-import { FiBarChart } from "@react-icons/all-files/fi/FiBarChart"
-import { HiOutlineRefresh } from "@react-icons/all-files/hi/HiOutlineRefresh"
-
+import { FiBarChart } from "@react-icons/all-files/fi/FiBarChart";
+import { HiOutlineRefresh } from "@react-icons/all-files/hi/HiOutlineRefresh";
 
 type Props = {
   month: number;
 };
 
 const TopComponent = ({ month }: Props) => {
-  const [totalRentCnt, setTotalRentCnt] = useState<number>(0); // 한달간 총 대여 수
-  const [totalMoveTime, setTotalMoveTime] = useState<number>(0); // 이용 시간 총합 (평균 이용 시간 구할 때 사용)
-  const [totalMoveDist, setTotalMoveDist] = useState<number>(0); // 이동거리 총합 (평균 이동 시간 구할 때 사용)
-  const [totalSavedCarb, setTotalSavedCarb] = useState<number>(0); // 총 절약 탄소량
+  const [totalRentCnt, setTotalRentCnt] = useState<number>(0);
+  const [totalMoveTime, setTotalMoveTime] = useState<number>(0);
+  const [totalMoveDist, setTotalMoveDist] = useState<number>(0);
+  const [totalSavedCarb, setTotalSavedCarb] = useState<number>(0);
   const [responseArr, setResponseArr] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -34,42 +33,30 @@ const TopComponent = ({ month }: Props) => {
       const { data } = await axios.get(url);
       const response = data.cycleRentUseMonthInfo;
 
-      setResponseArr(data.cycleRentUseMonthInfo.row);
+      setResponseArr(response.row);
 
       let totalMoveTimeSum = 0;
       let totalMoveDistSum = 0;
       let totalSavedCarbSum = 0;
       let totalRentCntSum = 0;
 
-      response.row.map((info: any) => {
-        // 총 대여수 구하기
-        // 대여수 USE_CNT
+      response.row.forEach((info: any) => {
         totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
         setTotalRentCnt(totalRentCntSum);
 
-        // 이용시간 전체 평균
-        // MOVE_TIME의 총합 / 총 대여수
-        // 단위는 분(min)
         totalMoveTimeSum += info.MOVE_TIME ? parseInt(info.MOVE_TIME) : 0;
         setTotalMoveTime(totalMoveTimeSum);
 
-        // 이동거리 전체 평균
-        // MOVE_METER / 총 대여수
-        // 단위는 미터(m) - Math.floor로 내림하기
-        totalMoveDistSum += info.MOVE_METER
-          ? Math.floor(parseInt(info.MOVE_METER))
-          : 0;
+        totalMoveDistSum += info.MOVE_METER ? Math.floor(parseInt(info.MOVE_METER)) : 0;
         setTotalMoveDist(totalMoveDistSum);
 
-        // 총 탄소 절감량
-        // CARBON_AMT 의 total
-        // 단위는 킬로그램(kg)
         totalSavedCarbSum += info.CARBON_AMT ? parseInt(info.CARBON_AMT) : 0;
         setTotalSavedCarb(totalSavedCarbSum);
       });
       setIsLoading(false);
     } catch (err) {
       console.log(err);
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +65,7 @@ const TopComponent = ({ month }: Props) => {
   }, [month]);
 
   return (
-    <div className="flex flex-wrap justify-center relative pt-8">
+    <div className="flex flex-col items-center justify-center py-10">
       {/* 총 대여 건수 container */}
       <TotalRentalCnt
         isLoading={isLoading}
@@ -88,7 +75,7 @@ const TopComponent = ({ month }: Props) => {
       />
 
       {/* 이용 & 이동 평균, 탄소, 나무 box - 4개 */}
-      <div className="flex m-3 flex-wrap justify-center gap-1 items-center">
+      <div className="flex flex-wrap justify-center gap-6 mt-8">
         <UserAnalysisThumb
           isLoading={isLoading}
           title="이용시간 평균"
@@ -100,24 +87,24 @@ const TopComponent = ({ month }: Props) => {
         <UserAnalysisThumb
           isLoading={isLoading}
           title="이용거리 평균"
-          iconColor="rgb(255, 244, 229)"
-          iconBg="rgb(254, 201, 15)"
+          iconColor="#FEBE15"
+          iconBg="#FFF6E0"
           amount={`${Math.floor(totalMoveDist / totalRentCnt)} 미터`}
           icon={<BsBoxSeam />}
         />
         <UserAnalysisThumb
           isLoading={isLoading}
           title="탄소 절감량 총합"
-          iconColor="rgb(228, 106, 118)"
-          iconBg="rgb(255, 244, 229)"
+          iconColor="#E46A76"
+          iconBg="#FFECEC"
           amount={`${totalSavedCarb} kg`}
           icon={<FiBarChart />}
         />
         <UserAnalysisThumb
           isLoading={isLoading}
           title="살린 나무의 수 (1그루=6.6kg)"
-          iconColor="rgb(0, 194, 146)"
-          iconBg="rgb(235, 250, 242)"
+          iconColor="#00C292"
+          iconBg="#E5F9F0"
           amount={`${Math.floor(totalSavedCarb / 6.6)} 그루`}
           icon={<HiOutlineRefresh />}
         />

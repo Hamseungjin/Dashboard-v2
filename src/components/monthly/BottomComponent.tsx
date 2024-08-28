@@ -19,14 +19,13 @@ const BottomComponent = ({ month }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [topFiveList, setTopFiveList] = useState<List[]>(undefined!);
   const [topFiveStation, setTopFiveStation] = useState<any>([]);
-  const [totalRentCnt, setTotalRentCnt] = useState<number>(0); // 한달간 총 대여 수
+  const [totalRentCnt, setTotalRentCnt] = useState<number>(0);
 
   const keyConfig = {
     API_KEY: import.meta.env.VITE_API_KEY,
   };
   const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
 
-  // 탑 5 정류장(topFiveStation)에서 필요한 데이터만 추출
   const selectDataFromTopFive = () => {
     const topFiveData = topFiveStation.map((station: any) => {
       return {
@@ -40,7 +39,6 @@ const BottomComponent = ({ month }: Props) => {
     setTopFiveList(topFiveData);
   };
 
-  // 비동기 데이터 fetching
   const fetchData = async () => {
     const { data } = await axios.get(url);
     const response = data.cycleRentUseMonthInfo;
@@ -49,12 +47,9 @@ const BottomComponent = ({ month }: Props) => {
 
     response.row.map((info: any) => {
       let totalRentCntSum = 0;
-      // 총 대여수 구하기
-      // 대여수 USE_CNT
       totalRentCntSum += info.USE_CNT ? parseInt(info.USE_CNT) : 0;
       setTotalRentCnt(totalRentCntSum);
 
-      // top 5 대여소 안에 드는지 확인
       if (
         findTopStations.length < 5 ||
         info.USE_CNT >
@@ -83,54 +78,55 @@ const BottomComponent = ({ month }: Props) => {
       selectDataFromTopFive();
     }
     setIsLoading(false);
-  }, [topFiveStation])
+  }, [topFiveStation]);
 
   return (
-    <div className="flex flex-wrap gap-8 items-center justify-center my-2 px-4">
+    <div className="flex flex-col md:flex-row gap-8 items-start justify-center my-4 px-6">
       {/* 하단의 상단 컨테이너 - line & bar */}
-      <section className="flex flex-col justify-center border bg-white rounded-xl shadow-lg p-4">
+      <section className="flex flex-col justify-between border border-gray-200 bg-gray-50 rounded-lg shadow-md p-6 w-full md:w-1/2">
         <>
-          <h1 className="font-semibold text-xl">대여소별 비교 분석</h1>
-          <p className="text-slate-500 text-sm mt-1">
-            대여 건수가 가장 많았던 대여소 5곳을 선별하여 비교 분석했습니다.
+          <h1 className="font-semibold text-2xl text-gray-800">
+            🚴‍♀️ 대여소별 비교 분석
+          </h1>
+          <p className="text-gray-600 text-sm mt-2">
+            상위 5개 대여소의 대여 건수를 비교 분석한 결과입니다.
           </p>
         </>
-
         {/* charts */}
-        <MontlyStationComparisonChart
-          topFiveList={topFiveList}
-          isLoading={isLoading}
-        />
+        <div className="mt-6">
+          <MontlyStationComparisonChart
+            topFiveList={topFiveList}
+            isLoading={isLoading}
+          />
+        </div>
       </section>
 
-      <section className="flex flex-col gap-6 w-[900px]">
+      <section className="flex flex-col w-full md:w-1/2 gap-6">
         {/* 탑5 통계 요약 */}
-        <div className="w-full flex flex-col justify-between border p-4 py-8 bg-white shadow-lg rounded-lg">
+        <div className="flex flex-col justify-between border border-gray-200 p-6 bg-white shadow-md rounded-lg">
           <Analysis
             isLoading={isLoading}
             month={month}
             topFiveList={topFiveList}
             totalRentCnt={totalRentCnt}
           />
-
           {/* 출처 */}
-          <div className="flex flex-col mt-16 text-sm">
-            <p className="text-slate-500">
-              모든 자료의 출처는 {"<서울 열린데이터 광장>"}의
-              '공공자전거이용정보'이며 자료 권한은 서울특별시에 있음을 알립니다.
+          <div className="mt-8 text-xs text-gray-500">
+            <p>
+              모든 자료의 출처는 {"<서울 열린데이터 광장>"}의 '공공자전거이용정보'이며 자료 권한은 서울특별시에 있음을 알립니다.
             </p>
-            <div className="flex gap-4 text-blue-500">
+            <div className="mt-2 flex flex-col md:flex-row gap-2 text-blue-500">
               <a
                 target="_blank"
                 href="https://www.seoul.go.kr/main/index.jsp"
-                className="hover:"
+                className="hover:underline"
               >
                 - 서울 열린데이터 광장 링크
               </a>
-              <a target="_blank" href="https://data.seoul.go.kr/index.do">
+              <a target="_blank" href="https://data.seoul.go.kr/index.do" className="hover:underline">
                 - 서울특별시 홈페이지 링크
               </a>
-              <a target="_blank" href="https://www.bikeseoul.com">
+              <a target="_blank" href="https://www.bikeseoul.com" className="hover:underline">
                 - 따릉이 홈페이지 링크
               </a>
             </div>

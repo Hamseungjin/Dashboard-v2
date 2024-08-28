@@ -8,36 +8,35 @@ type Props = {
   isLoading: boolean
 }
 
-
 const MontlyStationComparisonChart = ({ isLoading, topFiveList }: Props) => {
   return (
-    <div className="flex flex-wrap gap-8 justify-center mt-8">
-      {/* line chart container */}
+    <div className="flex flex-col md:flex-row gap-12 justify-center items-start mt-10">
+      {/* Line chart container */}
       <LineChartContainer topFiveList={topFiveList} isLoading={isLoading} />
 
-      {/* bar chart container */}
-      <div className="flex flex-col gap-8 p-2 w-[380px]">
-        {/* standards - 이용 시간, 이용 거리  */}
-        <div className="flex justify-end gap-4">
-          <p className="flex items-center text-gray-600">
-            <GoDotFill />
+      {/* Bar chart container */}
+      <div className="flex flex-col items-center md:items-start gap-6 w-full md:w-[400px]">
+        {/* Standards - 이용 시간, 이용 거리  */}
+        <div className="flex gap-4 text-sm text-gray-600">
+          <p className="flex items-center gap-2">
+            <GoDotFill className="text-blue-500" />
             <span>이용 거리</span>
           </p>
-          <p className="flex items-center text-primary-500">
-            <GoDotFill />
+          <p className="flex items-center gap-2">
+            <GoDotFill className="text-green-500" />
             <span>이용 시간</span>
           </p>
         </div>
 
-        {/* bar chart container */}
-        <div className="w-[400px] h-[360px]">
+        {/* Bar chart */}
+        <div className="w-full h-[360px] bg-white rounded-lg shadow-lg p-4">
           {isLoading || !topFiveList ? (
-            <div className="flex gap-4 min-h-60 items-center justify-center font-semibold text-lg">
+            <div className="flex flex-col items-center justify-center w-full h-full text-gray-600 text-lg font-medium">
               <Loader />
-            <p className="animate-pulse">차트를 그리는 중입니다. . .</p>
-          </div>
-          ): (
-            <MontlyUsageBarChart topFiveData={topFiveList}  />
+              <p className="mt-4 animate-pulse">차트를 그리는 중입니다...</p>
+            </div>
+          ) : (
+            <MontlyUsageBarChart topFiveData={topFiveList} />
           )}
         </div>
       </div>
