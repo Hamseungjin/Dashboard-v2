@@ -17,8 +17,8 @@ interface List {
 
 const BottomComponent = ({ month }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [topFiveList, setTopFiveList] = useState<List[]>(undefined!);
-  const [topFiveStation, setTopFiveStation] = useState<any>([]);
+  const [topTenList, setTopTenList] = useState<List[]>(undefined!);
+  const [topTenStation, setTopTenStation] = useState<any>([]);
   const [totalRentCnt, setTotalRentCnt] = useState<number>(0);
 
   const keyConfig = {
@@ -26,8 +26,8 @@ const BottomComponent = ({ month }: Props) => {
   };
   const url = `/api/${keyConfig.API_KEY}/json/tbCycleRentUseMonthInfo/1/1000/${month}`;
 
-  const selectDataFromTopFive = () => {
-    const topFiveData = topFiveStation.map((station: any) => {
+  const selectDataFromTopTen = () => {
+    const topTenData = topTenStation.map((station: any) => {
       return {
         name: station.STATION_NAME.split(".")[1].trim(),
         carb: parseInt(station.CARBON_AMT),
@@ -36,7 +36,7 @@ const BottomComponent = ({ month }: Props) => {
         use_cnt: parseInt(station.USE_CNT),
       };
     });
-    setTopFiveList(topFiveData);
+    setTopTenList(topTenData);
   };
 
   const fetchData = async () => {
@@ -51,7 +51,7 @@ const BottomComponent = ({ month }: Props) => {
       setTotalRentCnt(totalRentCntSum);
 
       if (
-        findTopStations.length < 5 ||
+        findTopStations.length < 10 ||
         info.USE_CNT >
           parseInt(findTopStations[findTopStations.length - 1].USE_CNT)
       ) {
@@ -60,10 +60,10 @@ const BottomComponent = ({ month }: Props) => {
           (a: any, b: any) => parseInt(b.USE_CNT) - parseInt(a.USE_CNT)
         );
 
-        if (findTopStations.length > 5) findTopStations.pop();
+        if (findTopStations.length > 10) findTopStations.pop();
       }
     });
-    setTopFiveStation(findTopStations);
+    setTopTenStation(findTopStations);
     setIsLoading(false);
   };
 
@@ -74,11 +74,11 @@ const BottomComponent = ({ month }: Props) => {
 
   useEffect(() => {
     setIsLoading(true);
-    if (topFiveStation.length > 0) {
-      selectDataFromTopFive();
+    if (topTenStation.length > 0) {
+      selectDataFromTopTen();
     }
     setIsLoading(false);
-  }, [topFiveStation]);
+  }, [topTenStation]);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 items-start justify-center my-4 px-6">
@@ -89,25 +89,25 @@ const BottomComponent = ({ month }: Props) => {
             🚴‍♀️ 대여소별 비교 분석
           </h1>
           <p className="text-gray-600 text-sm mt-2">
-            상위 5개 대여소의 대여 건수를 비교 분석한 결과입니다.
+            상위 10개 대여소의 대여 건수를 비교 분석한 결과입니다.
           </p>
         </>
         {/* charts */}
         <div className="mt-6">
           <MontlyStationComparisonChart
-            topFiveList={topFiveList}
+            topFiveList={topTenList} // topTenList로 변경
             isLoading={isLoading}
           />
         </div>
       </section>
 
       <section className="flex flex-col w-full md:w-1/2 gap-6">
-        {/* 탑5 통계 요약 */}
+        {/* 탑10 통계 요약 */}
         <div className="flex flex-col justify-between border border-gray-200 p-6 bg-white shadow-md rounded-lg">
           <Analysis
             isLoading={isLoading}
             month={month}
-            topFiveList={topFiveList}
+            topFiveList={topTenList} // topTenList로 변경
             totalRentCnt={totalRentCnt}
           />
           {/* 출처 */}

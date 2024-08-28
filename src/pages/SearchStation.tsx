@@ -20,26 +20,24 @@ const SearchStation = () => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<any[]>();
-
   const [searchLocation, setSearchLocation] = useState<LocationInfoType>();
+  const [showResults, setShowResults] = useState<boolean>(false);
 
-  // 검색한 장소의 위치 정보(도로명, 위도, 경도)를 searchLocation에 저장하는 함수
   const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchInput) {
       e.preventDefault();
-      // 검색 지역의 정보 찾기 (주소명, 경도, 위도)
       let geocoder = new window.kakao.maps.services.Geocoder();
       const response = async (result: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
           const formData = {
             location: result[0].address_name,
-            lon: Number(result[0].x), // 경도
-            lat: Number(result[0].y), // 위도
+            lon: Number(result[0].x),
+            lat: Number(result[0].y),
           };
           setSearchLocation(formData);
+          setShowResults(true);
         }
       };
-
       geocoder.addressSearch(searchInput, response);
     }
   };
@@ -47,18 +45,12 @@ const SearchStation = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-
       const url = `/api/${import.meta.env.VITE_API_KEY}/json/tbCycleStationInfo/1/1000`;
-
-      // 지도 UI 생성
       const { data } = await axios.get(url);
       const response = data.stationInfo.row;
 
       let nearByStations: any[] = [];
-      response.map((station: any) => {
-        // 위도(lat) lat +- 0.009
-        // 경도(lon) lon +- 0.009
-        // 둘다 만족해야함 station.STA_LAT, station.STA_LONG
+      response.forEach((station: any) => {
         if (
           station.STA_LAT >= searchLocation!.lat! - 0.009 &&
           station.STA_LAT <= searchLocation!.lat! + 0.009 &&
@@ -77,56 +69,56 @@ const SearchStation = () => {
         }
       });
       setSearchResult(nearByStations);
-
       setIsLoading(false);
     };
     if (searchLocation) fetchData();
   }, [searchLocation]);
 
   return (
-    <div className="my-20 px-4 mx-auto h-full flex items-center justify-center">
-      <div className="flex flex-wrap gap-8 justify-center">
-        {/* map */}
-        <KaKaoMap searchLocation={searchLocation} searchResult={searchResult} />
+    <div className="h-screen w-full flex flex-col">
+      <div className="flex-grow relative">
+        {/* Full screen map */}
+        <div className="absolute inset-0">
+          <KaKaoMap searchLocation={searchLocation} searchResult={searchResult} />
+        </div>
 
-        {/* search results */}
-        <div className="flex flex-col gap-4 bg-white w-[850px] min-h-[500px] border shadow-lg rounded-lg py-6 px-8">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="text-xl font-semibold">대여소 검색 :</div>
-            {/* 검색 UI */}
-            <input
-              type="text"
-              className="flex-1 border-b border-slate-400 p-2 placeholder:text-sm focus:outline-none"
-              placeholder="주소를 입력하면 주소지 근처 대여소를 찾습니다."
-              value={searchInput}
-              onChange={(e) => {
-                e.preventDefault();
-                setSearchInput(e.target.value);
-              }}
-              onKeyDown={handleSearch}
-            />
-          </div>
+        {/* Search input */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-1/2 z-10">
+          <input
+            type="text"
+            className="w-full p-2 rounded-lg border-2 border-blue-500 focus:outline-none focus:border-blue-700"
+            placeholder="주소를 입력하면 주소지 근처 대여소를 찾습니다."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+        </div>
 
-          {/* 검색 결과 */}
-          {isLoading ? (
-            <div className="h-full w-full flex items-center gap-2 justify-center">
-              <Loader />{" "}
-              <span className="font-semibold text-xl">
-                근처 대여소를 찾는 중입니다. . . .
-              </span>
-            </div>
-          ) : (
-            <div>
-              <ul className="flex flex-col gap-1">
-                {!searchResult ? (
-                  <div>
-                    근처에 대여소가 없습니다. 다른 검색어를 입력해 주세요.
-                  </div>
+        {/* Toggle button for results */}
+        <button
+          className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg z-10"
+          onClick={() => setShowResults(!showResults)}
+        >
+          {showResults ? "결과 숨기기" : "결과 보기"}
+        </button>
+
+        {/* Search results overlay */}
+        {showResults && (
+          <div className="absolute top-16 right-4 bg-white w-80 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-lg shadow-lg z-20 p-4">
+            <h2 className="text-xl font-semibold mb-4">대여소 검색 결과</h2>
+            {isLoading ? (
+              <div className="flex items-center gap-2 justify-center">
+                <Loader />
+                <span className="font-semibold">근처 대여소를 찾는 중입니다...</span>
+              </div>
+            ) : (
+              <div>
+                {!searchResult || searchResult.length === 0 ? (
+                  <div>근처에 대여소가 없습니다. 다른 검색어를 입력해 주세요.</div>
                 ) : (
                   <div>
                     <p className="text-slate-500 text-sm mb-4">
-                      입력하신 '{searchLocation!.location}' 근처에 위치한{" "}
-                      {searchResult.length}개의 정류소를 찾았습니다.
+                      입력하신 '{searchLocation!.location}' 근처에 위치한 {searchResult.length}개의 정류소를 찾았습니다.
                     </p>
                     {searchResult.map((station: any) => (
                       <SearchLocationResult
@@ -138,10 +130,10 @@ const SearchStation = () => {
                     ))}
                   </div>
                 )}
-              </ul>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
