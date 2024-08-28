@@ -124,7 +124,7 @@ const SearchStation = () => {
 
         {/* Search results overlay */}
         {showResults && (
-          <div className="absolute top-16 right-4 bg-white w-80 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-lg shadow-lg z-20 p-4">
+          <div className="absolute top-16 right-4 bg-white w-100 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-lg shadow-lg z-20 p-4">
             <h2 className="text-xl font-semibold mb-4">대여소 검색 결과</h2>
             {isLoading ? (
               <div className="flex items-center gap-2 justify-center">
@@ -145,7 +145,7 @@ const SearchStation = () => {
                         key={station.RENT_NO}
                         bikes={station.bikes}
                         location={station.location}
-                        address={station.location} // 주소 대신 대여소 이름만 표시
+                        address=""  // Pass an empty string or remove this prop if address is not needed
                       />
                     ))}
                   </div>
